@@ -126,7 +126,12 @@ typedef NS_ENUM (NSUInteger, YLProgressBarIndicatorTextDisplayMode)
    * The indicator text is displayed over the track bar and over the progress
    * bar in the right.
    */
-  YLProgressBarIndicatorTextDisplayModeFixedRight = 3
+  YLProgressBarIndicatorTextDisplayModeFixedRight = 3,
+  /**
+   *  The indicator text is displayed with the given value
+   * bar in the right.
+   */
+  YLProgressBarIndicatorTextDisplayModeValue = 4
 };
 
 /**
@@ -277,6 +282,21 @@ IB_DESIGNABLE @interface YLProgressBar : UIView
  * using the background color.
  */
 @property (nonatomic, strong, nonnull) UILabel *indicatorTextLabel;
+
+/**
+ *  Indicator text value only applicable for YLProgressBarIndicatorTextDisplayModeValue
+ */
+@property (nonatomic, strong, nonnull) NSString *indicatorTextValue;
+
+/**
+ *  Indicator text font only applicable for YLProgressBarIndicatorTextDisplayModeValue
+ */
+@property (nonatomic, strong, nonnull) NSString *indicatorTextFontName;
+
+/**
+ *  Indicator text font only applicable for YLProgressBarIndicatorTextDisplayModeValue
+ */
+@property (nonatomic, strong, nonnull) UIColor *indicatorTextColor;
 
 /**
  * @abstract The display indicator text mode. It defines where the indicator

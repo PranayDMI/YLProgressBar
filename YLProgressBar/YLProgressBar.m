@@ -109,7 +109,11 @@ const CGFloat YLProgressBarDefaultProgress = 0.3f;
   [super layoutSubviews];
 
   CGFloat height           = CGRectGetHeight(self.bounds) - CGRectGetHeight(self.bounds) / 3;
-  _indicatorTextLabel.font = [UIFont fontWithName:YLProgressBarDefaultName size: height];
+  if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue && self.indicatorTextFontName) {
+    _indicatorTextLabel.font = [UIFont fontWithName:self.indicatorTextFontName size: height];
+  } else {
+    _indicatorTextLabel.font = [UIFont fontWithName:YLProgressBarDefaultName size: height];
+  }
 }
 
 - (void)drawRect:(CGRect)rect
@@ -196,6 +200,12 @@ const CGFloat YLProgressBarDefaultProgress = 0.3f;
 
   // Draw the indicator text if necessary
   if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeFixedRight)
+  {
+    [self drawText:context withRect:rect];
+  }
+  
+  // Draw the indicator text if necessary
+  if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue)
   {
     [self drawText:context withRect:rect];
   }
@@ -612,7 +622,11 @@ const CGFloat YLProgressBarDefaultProgress = 0.3f;
 
   if (!hasText)
   {
-    indicatorText = [NSString stringWithFormat:@"%.0f%%", (self.progress * 100)];
+    if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue) {
+      indicatorText = self.indicatorTextValue;
+    } else {
+      indicatorText = [NSString stringWithFormat:@"%.0f%%", (self.progress * 100)];
+    }
   }
 
     CGRect textRect;
@@ -635,20 +649,24 @@ const CGFloat YLProgressBarDefaultProgress = 0.3f;
 
   if (!hasTextColor)
   {
-    CGColorRef backgroundColor = nil;
+    if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue) {
+      _indicatorTextLabel.textColor = self.indicatorTextColor;
+    } else {
+      CGColorRef backgroundColor = nil;
 
-    if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeTrack)
-    {
-      backgroundColor = _trackTintColor.CGColor ?: [UIColor blackColor].CGColor;
-    } else
-    {
-      backgroundColor = (__bridge CGColorRef)[_colors lastObject];
+      if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeTrack)
+      {
+        backgroundColor = _trackTintColor.CGColor ?: [UIColor blackColor].CGColor;
+      } else
+      {
+        backgroundColor = (__bridge CGColorRef)[_colors lastObject];
+      }
+
+      const CGFloat *components = CGColorGetComponents(backgroundColor);
+      BOOL isLightBackground    = (components[0] + components[1] + components[2]) / 3.0f >= 0.5f;
+
+      _indicatorTextLabel.textColor = (isLightBackground) ? [UIColor blackColor] : [UIColor whiteColor];
     }
-
-    const CGFloat *components = CGColorGetComponents(backgroundColor);
-    BOOL isLightBackground    = (components[0] + components[1] + components[2]) / 3.0f >= 0.5f;
-
-    _indicatorTextLabel.textColor = (isLightBackground) ? [UIColor blackColor] : [UIColor whiteColor];
   }
 
   [_indicatorTextLabel drawTextInRect:innerRect];
