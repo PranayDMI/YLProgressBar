@@ -195,17 +195,14 @@ const CGFloat YLProgressBarDefaultProgress = 0.3f;
     if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeProgress)
     {
       [self drawText:context withRect:innerRect];
+    } else if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue)
+    {
+      [self drawText:context withRect:innerRect];
     }
   }
 
   // Draw the indicator text if necessary
   if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeFixedRight)
-  {
-    [self drawText:context withRect:rect];
-  }
-  
-  // Draw the indicator text if necessary
-  if (_indicatorTextDisplayMode == YLProgressBarIndicatorTextDisplayModeValue)
   {
     [self drawText:context withRect:rect];
   }
